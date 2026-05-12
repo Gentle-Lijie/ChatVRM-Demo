@@ -1,11 +1,22 @@
 const CACHE_NAME = 'chat-vrm-models'
 
-export async function fetchWithCache(url: string): Promise<ArrayBuffer> {
-  const cache = await caches.open(CACHE_NAME)
+async function getCache(): Promise<Cache | null> {
+  try {
+    if (typeof caches === 'undefined') return null
+    return await caches.open(CACHE_NAME)
+  } catch {
+    return null
+  }
+}
 
-  const cached = await cache.match(url)
-  if (cached) {
-    return cached.arrayBuffer()
+export async function fetchWithCache(url: string): Promise<ArrayBuffer> {
+  const cache = await getCache()
+
+  if (cache) {
+    const cached = await cache.match(url)
+    if (cached) {
+      return cached.arrayBuffer()
+    }
   }
 
   const response = await fetch(url)
@@ -13,6 +24,9 @@ export async function fetchWithCache(url: string): Promise<ArrayBuffer> {
     throw new Error(`Failed to fetch ${url}: ${response.status}`)
   }
 
-  await cache.put(url, response.clone())
+  if (cache) {
+    await cache.put(url, response.clone())
+  }
+
   return response.arrayBuffer()
 }
