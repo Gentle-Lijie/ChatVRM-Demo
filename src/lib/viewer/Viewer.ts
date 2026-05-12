@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { Model } from './Model'
-import { fetchWithCache } from '@/lib/utils/cachedFetch'
+import { fetchWithCache, type FetchProgress } from '@/lib/utils/cachedFetch'
 
 export class Viewer {
   private _renderer: THREE.WebGLRenderer | null = null
@@ -55,12 +55,12 @@ export class Viewer {
     return this._camera
   }
 
-  async loadVrm(url: string) {
+  async loadVrm(url: string, onProgress?: (progress: FetchProgress) => void) {
     if (!this._camera) return
 
     this.unloadVrm()
 
-    const buffer = await fetchWithCache(url)
+    const buffer = await fetchWithCache(url, onProgress)
     this.model = new Model(this._camera)
     await this.model.loadVRMFromBuffer(buffer)
     this._scene.add(this.model.vrmScene)
