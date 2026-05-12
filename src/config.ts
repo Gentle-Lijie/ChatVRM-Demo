@@ -1,4 +1,4 @@
-export const DEFAULT_VRM_URL = '/Unagirl.vrm'
+export const DEFAULT_VRM_URL = 'https://github.com/uezo/ChatdollKit/raw/refs/heads/master/Demo/Model/Unagirl/Unagirl.vrm'
 export const DEFAULT_API_BASE_URL = 'https://api.openai.com/v1'
 export const DEFAULT_MODEL = 'gpt-4o-mini'
 export const DEFAULT_SYSTEM_PROMPT = `你是一个友好的 AI 助手，拥有可爱的虚拟形象。
